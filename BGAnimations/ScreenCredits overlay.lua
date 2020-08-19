@@ -20,21 +20,23 @@
 
 -- StepManiaCredits is defined in _fallback/Scripts/04 CreditsHelpers.lua.
 
-local line_on = cmd(zoom,0.875;strokecolor,color("#444444");shadowcolor,color("#444444");shadowlength,1)
-local section_on = cmd(diffuse,color("#88DDFF");strokecolor,color("#446688");shadowcolor,color("#446688");shadowlength,1)
-local subsection_on = cmd(diffuse,color("#88DDFF");strokecolor,color("#446688");shadowcolor,color("#446688");shadowlength,1)
-local item_padding_start = 4;
+local line_on = function(self) self:zoom(0.875):strokecolor(color("#444444")):shadowcolor(color("#444444")):shadowlength(1) end
+local section_on = function(self) self:diffuse( color("#88DDFF") ):strokecolor( color("#446688") ):shadowcolor( color("#446688")):shadowlength(1) end
+local subsection_on = function(self) self:diffuse( color("#88DDFF") ):strokecolor( color("#446688") ):shadowcolor( color("#446688")):shadowlength(1) end
+local item_padding_start = 4
 local line_height= 30
 -- Tell the credits table the line height so it can use it for logo sizing.
 StepManiaCredits.SetLineHeight(line_height)
 
 local creditScroller = Def.ActorScroller {
-	SecondsPerItem = 0.5;
-	NumItemsToDraw = 40;
+	SecondsPerItem = 0.5,
+	NumItemsToDraw = 40,
 	TransformFunction = function( self, offset, itemIndex, numItems)
 		self:y(line_height*offset)
-	end;
-	OnCommand = cmd(scrollwithpadding,item_padding_start,15);
+	end,
+	OnCommand = function( self )
+		self:scrollwithpadding(item_padding_start,15)
+	end
 }
 
 -- Add sections with padding.
@@ -52,14 +54,14 @@ for section in ivalues(StepManiaCredits.Get()) do
 end
 
 creditScroller.BeginCommand=function(self)
-	SCREENMAN:GetTopScreen():PostScreenMessage( 'SM_MenuTimer', (creditScroller.SecondsPerItem * (#creditScroller + item_padding_start) + 10) );
-end;
+	SCREENMAN:GetTopScreen():PostScreenMessage( 'SM_MenuTimer', (creditScroller.SecondsPerItem * (#creditScroller + item_padding_start) + 10) )
+end
 
 return Def.ActorFrame{
 	creditScroller..{
-		InitCommand=cmd(CenterX;y,SCREEN_BOTTOM-64),
+		InitCommand=function(self) self:xy( SCREEN_CENTER_X,SCREEN_BOTTOM-64 ) end
 	},
 	LoadActor(THEME:GetPathB("ScreenWithMenuElements","background/_bg top"))..{
-		InitCommand=cmd(Center),
-	},
-};
+		InitCommand=function(self) self:Center() end
+	}
+}
