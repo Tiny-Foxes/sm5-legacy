@@ -1,2 +1,3 @@
-return LoadFont("Common Normal") .. {
-};
+return Def.BitmapText{
+	Font= "Common Normal",
+}

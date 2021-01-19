@@ -1,9 +1,7 @@
-local t = Def.ActorFrame {};
-
-t[#t+1] = Def.ActorFrame {
-	Def.Quad {
-		InitCommand=cmd(zoomto,32,32);
-	};
-};
-
-return t
+return Def.ActorFrame {
+	Def.ActorFrame {
+		Def.Quad {
+			InitCommand=function(self) self:zoomto(32,32) end,
+		}
+	}
+}

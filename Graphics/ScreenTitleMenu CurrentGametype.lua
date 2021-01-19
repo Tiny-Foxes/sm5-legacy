@@ -1,8 +1,8 @@
-local curGameName = GAMESTATE:GetCurrentGame():GetName();
+local curGameName = GAMESTATE:GetCurrentGame():GetName()
 
-local t = LoadFont("Common Normal") .. {
+return Def.BitmapText{
+	Font= "Common Normal",
 	BeginCommand=function(self)
-		self:settextf( Screen.String("CurrentGametype"), curGameName );
-	end;
-};
-return t;
+		self:settextf( Screen.String("CurrentGametype"), curGameName )
+	end
+}

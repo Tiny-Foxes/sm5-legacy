@@ -1,9 +1,8 @@
-local PlayerNumber = ...;
-assert( PlayerNumber );
+local PlayerNumber = ...
+assert( PlayerNumber )
 
-local t = LoadFont("ScreenGameplay","RemainingTime") .. {
-	Name="SurvivalTime";
-	Text="";
-};
-
-return t
+return Def.BitmapText{
+	Font= THEME:GetPathF("ScreenGameplay","RemainingTime"),
+	Name="SurvivalTime",
+	Text="",
+}

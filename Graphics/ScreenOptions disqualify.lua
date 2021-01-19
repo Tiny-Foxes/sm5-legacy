@@ -1,3 +1,4 @@
-return LoadFont("Common Normal") .. {
-	Text=ScreenString("Disqualified");
-};
+return Def.BitmapText{
+	Font="Common Normal",
+	Text=ScreenString("Disqualified")
+}

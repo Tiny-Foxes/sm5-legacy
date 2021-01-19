@@ -1,7 +1,6 @@
-local t = Def.ActorFrame{
-	LoadActor("EditMenu Left")..{
-		BeginCommand=cmd(zoomx,-1);
-	};
-};
-
-return t;
+return Def.ActorFrame{
+	Def.Sprite{
+		Texture= "EditMenu Left",
+		BeginCommand=function(self) self:zoomx(-1) end,
+	}
+}

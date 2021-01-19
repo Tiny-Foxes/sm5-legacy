@@ -1,19 +1,20 @@
-local curScreen = Var "LoadingScreen";
-local curStageIndex = GAMESTATE:GetCurrentStageIndex() + 1;
-local playMode = GAMESTATE:GetPlayMode();
+local curScreen = Var "LoadingScreen"
+local curStageIndex = GAMESTATE:GetCurrentStageIndex() + 1
+local playMode = GAMESTATE:GetPlayMode()
 
-local t = Def.ActorFrame {
-	LoadActor(THEME:GetPathB("_frame","3x3"),"rounded black",64,16);
-	LoadFont("Common Normal") .. {
-		InitCommand=cmd(y,-1;shadowlength,1;playcommand,"Set");
-		CurrentSongChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentCourseChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentStepsP1ChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentStepsP2ChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentTraiP1ChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentTraiP2ChangedMessageCommand=cmd(playcommand,"Set");
+return Def.ActorFrame {
+	loadfile(THEME:GetPathB("_frame","3x3"))("rounded black",64,16),
+	Def.BitmapText{
+		Font= "Common Normal",
+		InitCommand=function(self) self:y(-1):shadowlength(1):playcommand("Set") end,
+		CurrentSongChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentCourseChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentStepsP2ChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentTraiP1ChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentTraiP2ChangedMessageCommand=function(self) self:playcommand("Set") end,
 		SetCommand=function(self)
-			local curStage = GAMESTATE:GetCurrentStage();
+			local curStage = GAMESTATE:GetCurrentStage()
 			if GAMESTATE:IsCourseMode() then
 				local stats = STATSMAN:GetCurStageStats()
 				if not stats then
@@ -21,10 +22,10 @@ local t = Def.ActorFrame {
 				end
 				local mpStats = stats:GetPlayerStageStats( GAMESTATE:GetMasterPlayerNumber() )
 				local songsPlayed = mpStats:GetSongsPassed() + 1
-				self:settextf("%i / %i", songsPlayed, GAMESTATE:GetCurrentCourse():GetEstimatedNumStages());
+				self:settextf("%i / %i", songsPlayed, GAMESTATE:GetCurrentCourse():GetEstimatedNumStages())
 			else
 				if GAMESTATE:IsEventMode() then
-					self:settextf("Stage %s", curStageIndex);
+					self:settextf("Stage %s", curStageIndex)
 				else
 					local thed_stage= thified_curstage_index(false)
 					if THEME:GetMetric(curScreen,"StageDisplayUseShortString") then
@@ -33,12 +34,11 @@ local t = Def.ActorFrame {
 						self:settextf("%s Stage", thed_stage)
 					end
 				end
-			end;
-			self:zoom(0.675);
-			self:diffuse(StageToColor(curStage));
-			self:diffusetopedge(ColorLightTone(StageToColor(curStage)));
-		end;
-	};
-};
-return t
+			end
+			self:zoom(0.675)
+			self:diffuse(StageToColor(curStage))
+			self:diffusetopedge(ColorLightTone(StageToColor(curStage)))
+		end
+	}
+}
 

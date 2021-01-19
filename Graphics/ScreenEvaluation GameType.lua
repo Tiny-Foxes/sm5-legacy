@@ -1,3 +1,4 @@
-return LoadFont("Common Normal") .. {
-	Text=GAMESTATE:GetCurrentGame():GetName();
-};
+return Def.BitmapText{
+	Font= "Common Normal",
+	Text=GAMESTATE:GetCurrentGame():GetName()
+}

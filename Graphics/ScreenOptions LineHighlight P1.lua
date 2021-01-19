@@ -1,2 +1,1 @@
-return LoadActor(THEME:GetPathG("OptionRowExit","frame")) .. {
-};
+return Def.Sprite{Texture=THEME:GetPathG("OptionRowExit","frame")}

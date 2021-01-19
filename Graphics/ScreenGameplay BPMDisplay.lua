@@ -4,32 +4,32 @@ local numPlayers = GAMESTATE:GetNumPlayersEnabled()
 local function UpdateSingleBPM(self)
 	local bpmDisplay = self:GetChild("BPMDisplay")
 	local pn = GAMESTATE:GetMasterPlayerNumber()
-	local pState = GAMESTATE:GetPlayerState(pn);
+	local pState = GAMESTATE:GetPlayerState(pn)
 	local songPosition = pState:GetSongPosition()
 	local bpm = songPosition:GetCurBPS() * 60
 	bpmDisplay:settext( string.format("%03.2f",bpm) )
 end
 
 local displaySingle = Def.ActorFrame{
+	InitCommand=function(self) self:SetUpdateFunction(UpdateSingleBPM) end,
 	-- manual bpm display
-	LoadFont("BPMDisplay", "bpm")..{
-		Name="BPMDisplay";
-		InitCommand=cmd(zoom,0.675;shadowlength,1);
-	};
+	Def.BitmapText{
+		Font= THEME:GetPathF("BPMDisplay", "bpm"),
+		Name="BPMDisplay",
+		InitCommand=function(self) self:zoom(0.675):shadowlength(1) end,
+	}
 
 	--[[
 	Def.SongBPMDisplay {
-		File=THEME:GetPathF("BPMDisplay", "bpm");
-		Name="BPMDisplay";
-		InitCommand=cmd(zoom,0.675;shadowlength,1);
-		SetCommand=function(self) self:SetFromGameState() end;
-		CurrentSongChangedMessageCommand=cmd(playcommand,"Set");
-		CurrentCourseChangedMessageCommand=cmd(playcommand,"Set");
-	};
+		File=THEME:GetPathF("BPMDisplay", "bpm"),
+		Name="BPMDisplay",
+		InitCommand=function(self) self:zoom(0.675):shadowlength(1) end,
+		SetCommand=function(self) self:SetFromGameState() end,
+		CurrentSongChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentCourseChangedMessageCommand=function(self) self:playcommand("Set") end,
+	}
 	--]]
-};
-
-displaySingle.InitCommand=cmd(SetUpdateFunction,UpdateSingleBPM);
+}
 
 if numPlayers == 1 then
 	return displaySingle
@@ -67,7 +67,7 @@ else
 		-- needs current bpm for p1 and p2
 		for pn in ivalues(PlayerNumber) do
 			local bpmDisplay = (pn == PLAYER_1) and dispP1 or dispP2
-			local pState = GAMESTATE:GetPlayerState(pn);
+			local pState = GAMESTATE:GetPlayerState(pn)
 			local songPosition = pState:GetSongPosition()
 			local bpm = songPosition:GetCurBPS() * 60
 			bpmDisplay:settext( string.format("%03.2f",bpm) )
@@ -75,21 +75,20 @@ else
 	end
 
 	local playerOffset = 36 -- was 28
-	local displayTwoPlayers = Def.ActorFrame{
+	return Def.ActorFrame{
+		InitCommand=function(self) self:SetUpdateFunction(Update2PBPM) end,
 		-- manual bpm displays
-		LoadFont("BPMDisplay", "bpm")..{
-			Name="DisplayP1";
-			InitCommand=cmd(x,-playerOffset;zoom,0.6;shadowlength,1);
-		};
-		LoadFont("BPMDisplay", "bpm")..{
-			Name="DisplayP2";
-			InitCommand=cmd(x,playerOffset;zoom,0.6;shadowlength,1);
-		};
-	};
-
-	displayTwoPlayers.InitCommand=cmd(SetUpdateFunction,Update2PBPM);
-
-	return displayTwoPlayers
+		Def.BitmapText{
+			Font= THEME:GetPathF("BPMDisplay", "bpm"),
+			Name="DisplayP1",
+			InitCommand=function(self) self:x(-playerOffset):zoom(0.6):shadowlength(1) end,
+		},
+		Def.BitmapText{
+			Font= THEME:GetPathF("BPMDisplay", "bpm"),
+			Name="DisplayP2",
+			InitCommand=function(self) self:x(playerOffset):zoom(0.6):shadowlength(1) end,
+		}
+	}
 end
 
 -- should not get here

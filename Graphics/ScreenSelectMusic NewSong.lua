@@ -1,3 +1,4 @@
-return LoadFont("Common Normal") .. {
-	Text=THEME:GetString("ScreenSelectMusic","NEW!");
-};
+return Def.BitmapText{
+	Font= "Common Normal",
+	Text=THEME:GetString("ScreenSelectMusic","NEW!")
+}
