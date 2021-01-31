@@ -1,19 +1,23 @@
-local jl = Var "JudgmentLine";
+local jl = Var "JudgmentLine"
 
 return Def.ActorFrame {
 	Def.Quad {
-		InitCommand=cmd(horizalign,right;zoomto,256,18);
-		OnCommand=cmd(diffuse,Color("Black");fadeleft,1);
-	};
+		InitCommand=function(self) self:horizalign(right):zoomto(256,18) end,
+		OnCommand=function(self) self:diffuse(Color("Black")):fadeleft(1) end,
+	},
 	Def.Quad {
-		InitCommand=cmd(horizalign,left;zoomto,256,18);
-		OnCommand=cmd(diffuse,Color("Black");faderight,1);
-	};
-	
-	LoadActor("_frame") .. {
-		InitCommand=cmd(diffuse,JudgmentLineToColor(jl));
-	};
-	LoadFont("Common Normal") .. {
-		InitCommand=cmd(zoom,0.675;settext,string.upper(JudgmentLineToLocalizedString(jl));diffuse,JudgmentLineToColor(jl);shadowlength,1;maxwidth,180);
-	};
-};
+		InitCommand=function(self) self:horizalign(left):zoomto(256,18) end,
+		OnCommand=function(self) self:diffuse(Color("Black")):faderight(1) end,
+	},
+
+	Def.Sprite{
+		Texture= THEME:GetPathG("","_JudgmentLineLabel/_frame"),
+		InitCommand=function(self) self:diffuse(JudgmentLineToColor(jl)) end,
+	},
+	Def.BitmapText{
+		Font= "Common Normal",
+		InitCommand=function(self)
+			self:zoom(0.675):settext(string.upper(JudgmentLineToLocalizedString(jl)))
+			:diffuse(JudgmentLineToColor(jl)):shadowlength(1):maxwidth(180) end,
+	}
+}
