@@ -61,7 +61,8 @@ return Def.ActorFrame{
 	creditScroller..{
 		InitCommand=function(self) self:xy( SCREEN_CENTER_X,SCREEN_BOTTOM-64 ) end
 	},
-	LoadActor(THEME:GetPathB("ScreenWithMenuElements","background/_bg top"))..{
+	Def.Sprite{
+		Texture=THEME:GetPathB("ScreenWithMenuElements","background/_bg top"),
 		InitCommand=function(self) self:Center() end
 	}
 }

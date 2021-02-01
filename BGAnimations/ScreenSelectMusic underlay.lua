@@ -1,12 +1,9 @@
-local t = Def.ActorFrame {
+return Def.ActorFrame {
+	InitCommand=function(self) self:Center() end,
 	Def.Quad {
-		InitCommand=cmd(zoomto,SCREEN_WIDTH,SCREEN_HEIGHT);
-		OnCommand=cmd(diffuse,Color.Black;diffusealpha,0);
-		StartSelectingStepsMessageCommand=cmd(stoptweening;linear,0.2;diffusealpha,0.75);
-		SongUnchosenMessageCommand=cmd(stoptweening;linear,0.2;diffusealpha,0);
-	};
-};
-
-t.InitCommand=cmd(Center);
-
-return t;
+		InitCommand=function(self) self:zoomto(SCREEN_WIDTH,SCREEN_HEIGHT) end,
+		OnCommand=function(self) self:diffuse(Color.Black):diffusealpha(0) end,
+		StartSelectingStepsMessageCommand=function(self) self:stoptweening():linear(0.2):diffusealpha(0.75) end,
+		SongUnchosenMessageCommand=function(self) self:stoptweening():linear(0.2):diffusealpha(0) end
+	}
+}

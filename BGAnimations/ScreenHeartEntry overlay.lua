@@ -12,22 +12,24 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	if profile and profile:GetIgnoreStepCountCalories() then
 		heart_entries[pn]= new_numpad_entry{
 			Name= pn .. "_heart_entry",
-			InitCommand= cmd(xy, heart_xs[pn], SCREEN_CENTER_Y+48),
-			value = LoadFont("Common Large") .. {
-				InitCommand=cmd(xy,0,-62),
-				OnCommand=cmd(zoom,0.75;diffuse,PlayerColor(pn);strokecolor,ColorDarkTone(PlayerColor(pn)));
+			InitCommand= function(self) self:xy( heart_xs[pn], SCREEN_CENTER_Y+48) end,
+			value = Def.BitmapText{
+				Font= "Common Large",
+				InitCommand=function(self) self:xy(0,-62) end,
+				OnCommand=function(self) self:zoom(0.75):diffuse(PlayerColor(pn)):strokecolor(ColorDarkTone(PlayerColor(pn))) end,
 				SetCommand=function(self, param)
 					self:settext(param[1])
 				end,
 			},
-			button = LoadFont("Common Normal") ..{
-				InitCommand=cmd(shadowlength,1),
+			button = Def.BitmapText{
+				Font= "Common Normal",
+				InitCommand=function(self) self:shadowlength(1) end,
 				SetCommand=function(self, param)
 					self:settext(param[1])
 				end,
-				OnCommand=cmd(diffuse,color("0.8,0.8,0.8,1");zoom,0.875),
-				GainFocusCommand=cmd(finishtweening;decelerate,0.125;zoom,1;diffuse,Color.White),
-				LoseFocusCommand=cmd(finishtweening;smooth,0.1;zoom,0.875;diffuse,color("0.8,0.8,0.8,1"))
+				OnCommand=function(self) self:diffuse(color("0.8,0.8,0.8,1")):zoom(0.875) end,
+				GainFocusCommand=function(self) self:finishtweening():decelerate(0.125):zoom(1):diffuse(Color.White) end,
+				LoseFocusCommand=function(self) self:finishtweening():smooth(0.1):zoom(0.875):diffuse(color("0.8,0.8,0.8,1")) end
 			},
 			button_positions = {{-cursor_spacing_value, -cursor_spacing_value}, {0, -cursor_spacing_value}, {cursor_spacing_value, -cursor_spacing_value},
 				{-cursor_spacing_value, 0},   {0, 0},   {cursor_spacing_value, 0},
@@ -44,31 +46,33 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 					end
 				end,
 				--
-				LoadActor( THEME:GetPathG("_frame", "1D"),
+				loadfile( THEME:GetPathG("_frame", "1D"))(
 					{ 2/18, 14/18, 2/18 },
-					LoadActor(THEME:GetPathB("_frame", "cursors/rounded fill"))
+					Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded fill") }
 				) .. {
-					OnCommand=cmd(diffuse,PlayerDarkColor(pn)),
+					OnCommand=function(self) self:diffuse(PlayerDarkColor(pn)) end,
 					FitCommand=function(self, param)
-						self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(stoptweening;decelerate,0.15)})
+						self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:stoptweening():decelerate(0.15) end})
 					end,
 				},
-				LoadActor( THEME:GetPathG("_frame", "1D"),
+				loadfile( THEME:GetPathG("_frame", "1D"))(
 					{ 2/18, 14/18, 2/18 },
-					LoadActor(THEME:GetPathB("_frame", "cursors/rounded gloss"))
+					Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded gloss") }
 				) .. {
-					OnCommand=cmd(diffuse,PlayerColor(pn)),
+					OnCommand=function(self) self:diffuse(PlayerColor(pn)) end,
 					FitCommand=function(self, param)
-						self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(stoptweening;decelerate,0.15)})
+						self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:stoptweening():decelerate(0.15) end})
 					end,
 				}
 			},
 			cursor_draw= "first",
-			prompt = LoadFont("Common Bold") .. {
+			prompt = Def.BitmapText{
+				Font= "Common Bold",
 				Name="prompt",
 				Text=THEME:GetString("ScreenHeartEntry", "Heart Rate"),
-				InitCommand=cmd(xy,0,-96);
-				OnCommand=cmd(shadowlength,1;skewx,-0.125;diffusebottomedge,color("#DDDDDD");strokecolor,Color.Outline);
+				InitCommand=function(self) self:xy(0,-96) end,
+				OnCommand=function(self)
+					self:shadowlength(1):skewx(-0.125):diffusebottomedge(color("#DDDDDD")):strokecolor(Color.Outline) end,
 			},
 			max_value= 300,
 			auto_done_value= 100,
@@ -126,42 +130,45 @@ local args= {
 		end,
 		Def.BitmapText{
 			Name= "timer_text", Font= "Common Normal", Text= "00.0",
-			InitCommand= cmd(xy, SCREEN_CENTER_X, SCREEN_CENTER_Y-80; diffuse, Color.White),
-			OnCommand= cmd(strokecolor,Color.Outline),
+			InitCommand= function(self) self:xy( SCREEN_CENTER_X, SCREEN_CENTER_Y-80):diffuse( Color.White) end,
+			OnCommand= function(self) self:strokecolor(Color.Outline) end,
 		}
 	},
 	Def.Quad {
-		InitCommand=cmd(xy, SCREEN_CENTER_X+1, SCREEN_CENTER_Y-100+1;zoomto,2,2);
-		OnCommand=cmd(diffuse,Color.Black;diffusealpha,0.5;linear,0.25;zoomtowidth,420;fadeleft,0.25;faderight,0.25);
-	};
+		InitCommand=function(self) self:xy( SCREEN_CENTER_X+1, SCREEN_CENTER_Y-100+1):zoomto(2,2) end,
+		OnCommand=function(self)
+			self:diffuse(Color.Black):diffusealpha(0.5):linear(0.25):zoomtowidth(420):fadeleft(0.25):faderight(0.25) end
+	},
 	Def.Quad {
-		InitCommand=cmd(xy, SCREEN_CENTER_X, SCREEN_CENTER_Y-100;zoomto,2,2);
-		OnCommand=cmd(diffuse,color("#ffd400");shadowcolor,BoostColor(color("#ffd40077"),0.25);linear,0.25;zoomtowidth,420;fadeleft,0.25;faderight,0.25);
-	};
+		InitCommand=function(self) self:xy( SCREEN_CENTER_X, SCREEN_CENTER_Y-100):zoomto(2,2) end,
+		OnCommand=function(self)
+			self:diffuse(color("#ffd400")):shadowcolor(BoostColor(color("#ffd40077"),0.25)):linear(0.25)
+			:zoomtowidth(420):fadeleft(0.25):faderight(0.25) end
+	},
 	Def.BitmapText {
 		Name= "explanation", Font= "Common Large",
 		Text= string.upper(THEME:GetString("ScreenHeartEntry", "Enter Heart Rate")),
-		InitCommand= cmd(xy, SCREEN_CENTER_X, SCREEN_CENTER_Y-128; diffuse, Color.White),
-		OnCommand=cmd(skewx,-0.125;diffuse,color("#ffd400");strokecolor,ColorDarkTone(color("#ffd400")))}
-	,
+		InitCommand= function(self) self:xy( SCREEN_CENTER_X, SCREEN_CENTER_Y-128):diffuse( Color.White) end,
+		OnCommand=function(self) self:skewx(-0.125):diffuse(color("#ffd400")):strokecolor(ColorDarkTone(color("#ffd400"))) end
+	},
 
 	Def.BitmapText{
 		Name= "song_len_label", Font= "Common Normal",
 		Text= THEME:GetString("ScreenHeartEntry", "Song Length"),
-		InitCommand= cmd(xy, SCREEN_CENTER_X, SCREEN_CENTER_Y+192-32; diffuse, Color.White),
-		OnCommand= cmd(shadowlength,1)},
+		InitCommand= function(self) self:xy( SCREEN_CENTER_X, SCREEN_CENTER_Y+192-32):diffuse( Color.White) end,
+		OnCommand= function(self) self:shadowlength(1) end},
 	Def.BitmapText{
 		Name= "song_len", Font= "Common Normal",
 		Text= SecondsToMMSS(GAMESTATE:GetLastGameplayDuration()),
-		InitCommand= cmd(xy, SCREEN_CENTER_X, SCREEN_CENTER_Y+192-8; diffuse, Color.White),
-		OnCommand= cmd(shadowlength,1;zoom,0.75),
+		InitCommand= function(self) self:xy( SCREEN_CENTER_X, SCREEN_CENTER_Y+192-8):diffuse( Color.White) end,
+		OnCommand= function(self) self:shadowlength(1):zoom(0.75) end,
 	}
 
 }
 
 for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
-	args[#args+1] = LoadActor(THEME:GetPathB("_frame","3x3"),"rounded black", 128, 192) .. {
-		InitCommand=cmd(x,heart_xs[pn];y,SCREEN_CENTER_Y+28),
+	args[#args+1] = loadfile(THEME:GetPathB("_frame","3x3"))("rounded black", 128, 192) .. {
+		InitCommand=function(self) self:x(heart_xs[pn]):y(SCREEN_CENTER_Y+28) end,
 	}
 end
 

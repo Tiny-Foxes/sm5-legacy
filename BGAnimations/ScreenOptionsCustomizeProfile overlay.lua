@@ -26,22 +26,24 @@ local cursor_spacing_value = 30
 -- enter a number, and the prompt is updated by running its SetCommand.
 local number_entry= new_numpad_entry{
 	Name= "number_entry",
-	InitCommand= cmd(diffusealpha, 0; xy, _screen.cx, _screen.cy * 1.5),
-	value = LoadFont("Common Large") .. {
-		InitCommand=cmd(xy,0,-62),
-		OnCommand=cmd(zoom,0.75;diffuse,PlayerColor(PLAYER_1);strokecolor,ColorDarkTone(PlayerColor(PLAYER_1)));
+	InitCommand= function(self) self:diffusealpha( 0): xy( _screen.cx, _screen.cy * 1.5) end,
+	value = Def.BitmapText{
+		Font="Common Large",
+		InitCommand=function(self) self:xy(0,-62) end,
+		OnCommand=function(self) self:zoom(0.75):diffuse(PlayerColor(PLAYER_1)):strokecolor(ColorDarkTone(PlayerColor(PLAYER_1))) end,
 		SetCommand=function(self, param)
 			self:settext(param[1])
 		end,
 	},
-	button = LoadFont("Common Normal") ..{
-		InitCommand=cmd(shadowlength,1),
+	button = Def.BitmapText{
+		Font= "Common Normal",
+		InitCommand=function(self) self:shadowlength(1) end,
 		SetCommand=function(self, param)
 			self:settext(param[1])
 		end,
-		OnCommand=cmd(diffuse,color("0.8,0.8,0.8,1");zoom,0.875),
-		GainFocusCommand=cmd(finishtweening;decelerate,0.125;zoom,1;diffuse,Color.White),
-		LoseFocusCommand=cmd(finishtweening;smooth,0.1;zoom,0.875;diffuse,color("0.8,0.8,0.8,1"))
+		OnCommand=function(self) self:diffuse(color("0.8,0.8,0.8,1")):zoom(0.875) end,
+		GainFocusCommand=function(self) self:finishtweening():decelerate(0.125):zoom(1):diffuse(Color.White) end,
+		LoseFocusCommand=function(self) self:finishtweening():smooth(0.1):zoom(0.875):diffuse(color("0.8,0.8,0.8,1")) end
 	},
 	button_positions = {{-cursor_spacing_value, -cursor_spacing_value}, {0, -cursor_spacing_value}, {cursor_spacing_value, -cursor_spacing_value},
 		{-cursor_spacing_value, 0},   {0, 0},   {cursor_spacing_value, 0},
@@ -58,36 +60,38 @@ local number_entry= new_numpad_entry{
 			end
 		end,
 		--
-		LoadActor( THEME:GetPathG("_frame", "1D"),
-							 { 2/18, 14/18, 2/18 },
-							 LoadActor(THEME:GetPathB("_frame", "cursors/rounded fill"))
+		loadfile( THEME:GetPathG("_frame", "1D"))(
+			{ 2/18, 14/18, 2/18 },
+			Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded fill") }
 		) .. {
-			OnCommand=cmd(diffuse,PlayerDarkColor(PLAYER_1)),
+			OnCommand=function(self) self:diffuse(PlayerDarkColor(PLAYER_1)) end,
 			FitCommand=function(self, param)
-				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(decelerate,0.125)})
+				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:decelerate(0.125) end})
 			end,
-				 },
-		LoadActor( THEME:GetPathG("_frame", "1D"),
-							 { 2/18, 14/18, 2/18 },
-							 LoadActor(THEME:GetPathB("_frame", "cursors/rounded gloss"))
+		},
+		loadfile( THEME:GetPathG("_frame", "1D"))(
+			{ 2/18, 14/18, 2/18 },
+			Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded gloss") }
 		) .. {
-			OnCommand=cmd(diffuse,PlayerColor(PLAYER_1)),
+			OnCommand=function(self) self:diffuse(PlayerColor(PLAYER_1)) end,
 			FitCommand=function(self, param)
-				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(decelerate,0.125)})
+				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:decelerate(0.125) end})
 			end,
-				 }
+		}
 	},
 	cursor_draw= "first",
-	prompt = LoadFont("Common Bold") .. {
+	prompt = Def.BitmapText{
+		Font= "Common Bold",
 		Name="prompt",
-		InitCommand=cmd(xy,0,-96);
-		OnCommand=cmd(shadowlength,1;skewx,-0.125;diffusebottomedge,color("#DDDDDD");strokecolor,Color.Outline);
+		InitCommand=function(self) self:xy(0,-96) end,
+		OnCommand=function(self)
+			self:shadowlength(1):skewx(-0.125):diffusebottomedge(color("#DDDDDD")):strokecolor(Color.Outline) end,
 		SetCommand= function(self, params)
 			self:settext(params[1])
 		end
 	},
-	LoadActor(THEME:GetPathB("_frame","3x3"),"rounded black", 128, 192) .. {
-		InitCommand=cmd(xy, 0, -20)
+	loadfile(THEME:GetPathB("_frame","3x3"))("rounded black", 128, 192) .. {
+		InitCommand=function(self) self:xy( 0, -20) end
 	}
 }
 
@@ -355,24 +359,24 @@ local args= {
 			self:addx(param:GetWidth()/2)
 		end,
 		--
-		LoadActor( THEME:GetPathG("_frame", "1D"),
-							 { 2/18, 14/18, 2/18 },
-							 LoadActor(THEME:GetPathB("_frame", "cursors/rounded fill"))
+		loadfile( THEME:GetPathG("_frame", "1D"))(
+			{ 2/18, 14/18, 2/18 },
+			Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded fill") }
 		) .. {
-			OnCommand=cmd(diffuse,PlayerDarkColor(PLAYER_1)),
+			OnCommand=function(self) self:diffuse(PlayerDarkColor(PLAYER_1)) end,
 			FitCommand=function(self, param)
-				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(stoptweening;decelerate,0.15)})
+				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:stoptweening():decelerate(0.15) end})
 			end,
-				 },
-		LoadActor( THEME:GetPathG("_frame", "1D"),
-							 { 2/18, 14/18, 2/18 },
-							 LoadActor(THEME:GetPathB("_frame", "cursors/rounded gloss"))
+		},
+		loadfile( THEME:GetPathG("_frame", "1D"))(
+			{ 2/18, 14/18, 2/18 },
+			Def.Sprite{ Texture= THEME:GetPathB("_frame", "cursors/rounded gloss") }
 		) .. {
-			OnCommand=cmd(diffuse,PlayerColor(PLAYER_1)),
+			OnCommand=function(self) self:diffuse(PlayerColor(PLAYER_1)) end,
 			FitCommand=function(self, param)
-				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=cmd(stoptweening;decelerate,0.15)})
+				self:playcommand("SetSize",{ Width=param:GetWidth()+cursor_width_padding, tween=function(self) self:stoptweening():decelerate(0.15) end})
 			end,
-				 }
+		}
 	},
 }
 
@@ -437,18 +441,20 @@ for i, item in ipairs(menu_items) do
 			-- value changes and checks the new width to position itself.
 			-- Show/Hide is only played when the indicator changes state.
 			-- Command execution order: Set, Show/Hide (if change occurred), Press
-			value_args[#value_args+1]= LoadActor(THEME:GetPathG("_StepsDisplayListRow","arrow")) .. {
+			value_args[#value_args+1]= Def.Sprite{
+				Texture= THEME:GetPathG("_StepsDisplayListRow","arrow"),
 				InitCommand= function(self)
 					self:rotationy(-180)
 					self:x(-8)
 					self:visible(false)
 					self:playcommand("Set", {value_text})
 				end,
-				ShowLeftCommand= cmd(visible, true),
-				HideLeftCommand= cmd(visible, false),
-				PressLeftCommand= cmd(finishtweening;zoom,1.5;smooth,0.25;zoom,1),
+				ShowLeftCommand= function(self) self:visible( true) end,
+				HideLeftCommand= function(self) self:visible( false) end,
+				PressLeftCommand= function(self) self:finishtweening():zoom(1.5):smooth(0.25):zoom(1) end,
 			}
-			value_args[#value_args+1]= LoadActor(THEME:GetPathG("_StepsDisplayListRow","arrow")) .. {
+			value_args[#value_args+1]= Def.Sprite{
+				Texture= THEME:GetPathG("_StepsDisplayListRow","arrow"),
 				InitCommand= function(self)
 					self:visible(false)
 					self:playcommand("Set", {value_text})
@@ -457,9 +463,9 @@ for i, item in ipairs(menu_items) do
 					local valw= self:GetParent():GetChild("val"):GetWidth()
 					self:x(valw+8)
 				end,
-				ShowRightCommand= cmd(visible, true),
-				HideRightCommand= cmd(visible, false),
-				PressRightCommand= cmd(finishtweening;zoom,1.5;smooth,0.25;zoom,1),
+				ShowRightCommand= function(self) self:visible(true) end,
+				HideRightCommand= function(self) self:visible(false) end,
+				PressRightCommand= function(self) self:finishtweening():zoom(1.5):smooth(0.25):zoom(1) end,
 			}
 		end
 		args[#args+1]= Def.ActorFrame(value_args)
@@ -467,7 +473,7 @@ for i, item in ipairs(menu_items) do
 end
 
 local _height = (#menu_items) * 24
-args[#args+1]= LoadActor(THEME:GetPathB("_frame", "3x3"),"rounded black",474,_height) .. {
+args[#args+1]= loadfile(THEME:GetPathB("_frame", "3x3"))("rounded black",474,_height) .. {
 	Name= "fader", InitCommand= function(self)
 		fader= self
 		self:draworder(-20)

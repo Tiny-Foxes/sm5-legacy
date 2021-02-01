@@ -2,12 +2,12 @@ local raveChildren
 
 local bg = Def.ActorFrame{
 	Def.Quad{
-		InitCommand=cmd(FullScreen;diffuse,color("0,0,0,0"));
-		OnCommand=cmd(linear,5;diffusealpha,1);
-	};
+		InitCommand=function(self) self:FullScreen():diffuse(color("0,0,0,0")) end,
+		OnCommand=function(self) self:linear(5):diffusealpha(1) end,
+	},
 
 	Def.ActorFrame{
-		Name="RaveMessages";
+		Name="RaveMessages",
 		InitCommand=function(self)
 			raveChildren = self:GetChildren()
 			self:visible(GAMESTATE:GetPlayMode() == 'PlayMode_Rave')
@@ -15,7 +15,7 @@ local bg = Def.ActorFrame{
 			raveChildren.P1Win:visible(false)
 			raveChildren.P2Win:visible(false)
 			raveChildren.Draw:visible(false)
-		end;
+		end,
 		OffCommand=function(self)
 			local p1Win = GAMESTATE:IsWinner(PLAYER_1)
 			local p2Win = GAMESTATE:IsWinner(PLAYER_2)
@@ -27,24 +27,30 @@ local bg = Def.ActorFrame{
 			else
 				raveChildren.Draw:visible(true)
 			end
-		end;
+		end,
 
-		LoadActor(THEME:GetPathG("_rave result","P1"))..{
-			Name="P1Win";
-			InitCommand=cmd(Center;cropbottom,1;fadebottom,1;);
-			OnCommand=cmd(sleep,2;linear,0.5;cropbottom,0;fadebottom,0;sleep,1.75;linear,0.25;diffusealpha,0);
-		};
-		LoadActor(THEME:GetPathG("_rave result","P2"))..{
-			Name="P2Win";
-			InitCommand=cmd(Center;cropbottom,1;fadebottom,1;);
-			OnCommand=cmd(sleep,2;linear,0.5;cropbottom,0;fadebottom,0;sleep,1.75;linear,0.25;diffusealpha,0);
-		};
-		LoadActor(THEME:GetPathG("_rave result","draw"))..{
-			Name="Draw";
-			InitCommand=cmd(Center;cropbottom,1;fadebottom,1;);
-			OnCommand=cmd(sleep,2;linear,0.5;cropbottom,0;fadebottom,0;sleep,1.75;linear,0.25;diffusealpha,0);
-		};
-	};
-};
+		Def.Sprite{
+			Texture= THEME:GetPathG("_rave result","P1"),
+			Name="P1Win",
+			InitCommand=function(self) self:Center():cropbottom(1):fadebottom(1) end,
+			OnCommand=function(self)
+				self:sleep(2):linear(0.5):cropbottom(0):fadebottom(0):sleep(1.75):linear(0.25):diffusealpha(0) end,
+		},
+		Def.Sprite{
+			Texture= THEME:GetPathG("_rave result","P2"),
+			Name="P2Win",
+			InitCommand=function(self) self:Center():cropbottom(1):fadebottom(1) end,
+			OnCommand=function(self)
+				self:sleep(2):linear(0.5):cropbottom(0):fadebottom(0):sleep(1.75):linear(0.25):diffusealpha(0) end,
+		},
+		Def.Sprite{
+			Texture= THEME:GetPathG("_rave result","draw"),
+			Name="Draw",
+			InitCommand=function(self) self:Center():cropbottom(1):fadebottom(1) end,
+			OnCommand=function(self)
+				self:sleep(2):linear(0.5):cropbottom(0):fadebottom(0):sleep(1.75):linear(0.25):diffusealpha(0) end,
+		}
+	}
+}
 
 return bg

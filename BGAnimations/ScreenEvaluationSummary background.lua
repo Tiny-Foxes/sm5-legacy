@@ -1,3 +1,1 @@
-local t = LoadActor(THEME:GetPathB("ScreenWithMenuElements","background"));
-
-return t;
+return loadfile(THEME:GetPathB("ScreenWithMenuElements","background"))()

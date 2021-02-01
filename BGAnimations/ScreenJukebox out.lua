@@ -1,6 +1,6 @@
 return Def.ActorFrame{
 	Def.Quad{
-		InitCommand=cmd(FullScreen;diffuse,color("0,0,0,0"));
-		OnCommand=cmd(accelerate,0.5;diffusealpha,1);
-	};
-};
+		InitCommand=function(self) self:FullScreen():diffuse(color("0,0,0,0")) end,
+		OnCommand=function(self) self:accelerate(0.5):diffusealpha(1) end,
+	}
+}
